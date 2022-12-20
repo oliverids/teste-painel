@@ -1,15 +1,16 @@
+
 const barChart = document.getElementById('barChart'),
     lineChart = document.getElementById('lineChart');
 
 new Chart(barChart, {
     type: 'bar',
     data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
         datasets: [{
-            label: '# of Votes',
+            label: 'Valor Contratado (em milhões)',
             data: [12, 19, 3, 5, 2, 3],
             borderWidth: 1
-        }]
+        }],
     },
     options: {
         scales: {
@@ -25,7 +26,7 @@ new Chart(lineChart, {
     data: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
         datasets: [{
-          label: 'My First Dataset',
+          label: 'Superavit (em milhões)',
           data: [65, 59, 80, 81, 56, 55, 40],
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
@@ -33,3 +34,5 @@ new Chart(lineChart, {
         }]
     }
 });
+
+
