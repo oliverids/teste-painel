@@ -1,13 +1,14 @@
 const data = await fetch('https://api.npoint.io/23f47eae1b1cf839cbe9').then(r => r.json()),
     cidades = await data.cidades,
     barCharts = await data.barCharts,
-    lineCharts = await data.lineCharts;
-
+    lineCharts = await data.lineCharts,
+    apiCharts = await data.charts;
 
 const barChart = document.getElementById('barChart'),
     lineChart = document.getElementById('lineChart');
 
-let bar = new Chart(barChart, {
+//gráficos iniciais
+let chartOne = new Chart(barChart, {
     type: 'bar',
     data: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
@@ -26,7 +27,7 @@ let bar = new Chart(barChart, {
     }
 });
 
-let line = new Chart(lineChart, {
+let chartTwo = new Chart(lineChart, {
     type: 'line',
     data: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
@@ -41,45 +42,33 @@ let line = new Chart(lineChart, {
 });
 
 
+//destruição e reconstrução a partir do mapa
 function createChart(id) {
-    bar.destroy();
-    line.destroy();
+    chartOne.destroy();
+    chartTwo.destroy();
 
-    // bar.data.datasets.data = [0, 0, 0, 0, 0, 0];
-    // bar.update();
+    
+    let labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
 
-    // console.log(bar.data.datasets.data)
-
-
-    bar = new Chart(barChart, {
-        type: 'bar',
+    chartOne = new Chart(barChart, {
+        type: apiCharts[id].type,
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+            labels: labels,
             datasets: [{
                 label: 'Valor Contratado (em milhões)',
                 data: barCharts[id].data,
                 borderWidth: 1
             }],
         },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
     });
 
-     line = new Chart(lineChart, {
-        type: 'line',
+     chartTwo = new Chart(lineChart, {
+        type: apiCharts[id+1].type,
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+            labels: labels,
             datasets: [{
               label: 'Superavit (em milhões)',
               data: barCharts[id].data,
-              fill: false,
-              borderColor: 'rgb(75, 192, 192)',
-              tension: 0.1
             }]
         }
     });
@@ -105,6 +94,8 @@ for (let i = 0; i < cidades.length; i++) {
     L.marker([cidades[i].lat, cidades[i].lon]).bindPopup(popupContent).addTo(map);
 }
 
+
+//map click event
 map.on('popupopen', function (e) {
     let marker = e.popup._source._popup._content,
         anchor = marker.substring(
